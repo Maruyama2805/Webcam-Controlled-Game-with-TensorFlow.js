@@ -37,7 +37,7 @@ O motor de detecção é o **MediaPipe Hands**. Ele identifica **21 pontos-chave
 - Para o funcionamento do jogo, o JavaScript extrai esses pontos e calcula a média entre o pulso e a base dos dedos para encontrar o **centro da palma**.
 - Esse ponto central é o que interage com os objetos do jogo.
 
-  <img width="1543" height="538" alt="image" src="https://github.com/user-attachments/assets/b4c2b89a-aa65-48cf-b54e-c93900375b05" />
+<img width="1543" height="538" alt="image" src="https://github.com/user-attachments/assets/b4c2b89a-aa65-48cf-b54e-c93900375b05" />
 
 > ****
 
