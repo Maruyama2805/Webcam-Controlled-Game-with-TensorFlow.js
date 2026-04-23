@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Air Juggler using TensorFlow.js - Gesture-Controlled Game</title>
+    <title>Air Juggler - Gesture-Controlled Game</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,14 +15,15 @@
   <body>
     <div class="container">
       <h1>Air Juggler</h1>
-      <p class="instructions">Use your hands to keep the balls in the air!</p>
+      <p class="instructions">
+        Move your hands in front of the camera to keep the ball in the air!
+      </p>
 
-      <!-- Canvas wrapper for video and game canvas -->
       <div class="canvas-wrapper">
-        <!-- Video element for webcam (mirrored) -->
+        <!-- Hidden video element for webcam -->
         <video id="webcam" autoplay playsinline></video>
 
-        <!-- Game canvas (transparent, overlays video) -->
+        <!-- Game canvas -->
         <canvas id="gameCanvas" width="640" height="480"></canvas>
 
         <!-- Game state overlay -->
@@ -47,7 +48,7 @@
       </div>
     </div>
 
-    <!-- Load TensorFlow.js and MediaPipe Hands -->
+    <!-- Load TensorFlow.js and MediaPipe models -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/hand-pose-detection"></script>

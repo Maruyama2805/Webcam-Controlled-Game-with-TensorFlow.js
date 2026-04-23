@@ -14,27 +14,26 @@ async function setupHandTracking(videoElement, sendHands) {
   sendHandsCallback = sendHands;
 
   try {
-    // Request webcam access
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: 640, height: 480 },
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      //browser tries to match, but may use diferent resolution based on device capabilities
+      video: { width: 640, height: 480 } 
     });
 
+    //connect webcam stream to video element
     video.srcObject = stream;
     await video.play();
 
-    // Load MediaPipe Hands model
+    // Load MediaPipe Hands Model
     const model = window.handPoseDetection.SupportedModels.MediaPipeHands;
     const detectorConfig = {
-      runtime: "mediapipe",
-      solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/hands",
+      runtime: "mediapipe", // ModelPipe is more effcieny than tfjs
+      solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/hands", // URL where model files are hosted
       maxHands: 2,
-      modelType: "full",
+      modelType: "full", // "lite" is faster but less accurate
     };
 
-    detector = await window.handPoseDetection.createDetector(
-      model,
-      detectorConfig,
-    );
+    // Create the detector: 
+    detector = await window.handPoseDetection.createDetector(model, detectorConfig);
 
     console.log("Hand tracking initialized successfully");
     return true;
@@ -71,30 +70,34 @@ function stopDetection() {
  * Detect hands and call sendHandsCallback with positions
  */
 async function detectHands() {
-  if (!isDetecting) return;
+  if (!isDetecting) {
+    console.log("Hand detection not active, stopping detection loop");
+    return;
+  };
 
   try {
+    // Run hand detection on current video frame:
     const hands = await detector.estimateHands(video);
+    console.log("Detected hands:", hands);
 
-    // Transform hand landmarks to canvas coordinates
+    // Transform hand landmarks to canvas coordinates:
     const handPositions = hands.map((hand) => {
-      // Get palm center (keypoint 0 is wrist, we'll use average of palm base points)
-      const palmBase = [0, 5, 9, 13, 17].map((i) => hand.keypoints[i]); // Wrist and base of index, middle, ring and pinky fingers
-      const avgX =
-        palmBase.reduce((sum, kp) => sum + kp.x, 0) / palmBase.length;
-      const avgY =
-        palmBase.reduce((sum, kp) => sum + kp.y, 0) / palmBase.length;
+      //Get Palm center (average of wrists and thumb)
+      const palmBase = [0, 5, 9, 13, 17].map((idx) => hand.keypoints[idx]); //palm base points
+      const avgX = palmBase.reduce((sum, kp) => sum + kp.x, 0) / palmBase.length; 
+      const avgY = palmBase.reduce((sum, kp) => sum + kp.y, 0) / palmBase.length;
 
       return {
-        x: 640 - avgX, // Mirror x coordinate to match video flip
+        x: 640 - avgX, // Mirror X coordinate for natural interaction
         y: avgY,
-      };
+      }
     });
 
-    // Call sendHandsCallback with hand positions
+    // Call sendHandsCallback with hand positions:
     if (sendHandsCallback) {
       sendHandsCallback(handPositions);
     }
+
   } catch (error) {
     console.error("Error detecting hands:", error);
   }

@@ -5,7 +5,7 @@ const config = {
   gravity: 0.2,
   bounceVelocity: -8,
   handRadius: 50,
-  countdownTime: 3, // Seconds before game starts
+  countdownTime: 3,
 };
 
 // Game state
@@ -37,10 +37,10 @@ function initBalls() {
   gameState.balls = [];
   for (let i = 0; i < config.ballCount; i++) {
     gameState.balls.push({
-      x: canvas.width / 2, // Start in center
+      x: canvas.width / 2,
       y: 100,
-      vx: 0, // No initial horizontal velocity
-      vy: 0, // No initial vertical velocity
+      vx: 0,
+      vy: 0,
       radius: config.ballRadius,
       color: `hsl(${i * 120}, 70%, 60%)`,
     });
@@ -117,20 +117,17 @@ function updateScore() {
 
 // Render everything
 function render() {
-  // Draw video feed directly onto canvas (mirrored)
+  // Draw video feed directly onto canvas (provided)
   const webcam = document.getElementById("webcam");
   if (webcam && webcam.readyState === webcam.HAVE_ENOUGH_DATA) {
     ctx.save();
-    // Mirror the video horizontally
     ctx.scale(-1, 1);
     ctx.drawImage(webcam, -canvas.width, 0, canvas.width, canvas.height);
     ctx.restore();
 
-    // Add semi-transparent overlay for better game element visibility
     ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   } else {
-    // Fallback if video not ready
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
@@ -200,11 +197,11 @@ function gameLoop() {
 
   // Handle countdown
   if (gameState.isCountingDown) {
-    gameState.countdown -= 1 / 60; // Decrease by frame time (assuming 60fps)
+    gameState.countdown -= 1 / 60;
 
     if (gameState.countdown <= 0) {
       gameState.isCountingDown = false;
-      gameState.startTime = Date.now(); // Start timer after countdown
+      gameState.startTime = Date.now();
     }
   } else {
     // Only update game logic after countdown finishes
@@ -226,7 +223,7 @@ function gameLoop() {
 // Start game
 async function startGame() {
   gameState.gameOver = false;
-  gameState.startTime = null; // Will be set after countdown
+  gameState.startTime = null;
   gameState.score = 0;
   gameState.hands = [];
   gameState.countdown = config.countdownTime;
@@ -234,37 +231,36 @@ async function startGame() {
 
   initBalls();
 
-  // Initialize hand tracking if not already done
+  // Initialize hand tracking if not already done:
   if (!window.handTrackingInitialized) {
-    // Show loading overlay
+    //show loading status
     loadingOverlay.classList.remove("hidden");
     loadingStatus.textContent = "Requesting camera access...";
 
     const webcam = document.getElementById("webcam");
 
-    // Update loading status
     loadingStatus.textContent = "Loading MediaPipe Hands model...";
 
     const success = await window.handTracking.setupHandTracking(
       webcam,
-      function receiveHands(hands) {
-        gameState.hands = hands;
+      (hands) => {
+        gameState.hands = hands; //Update hand positions in game state
       },
     );
 
-    // Hide loading overlay
     loadingOverlay.classList.add("hidden");
 
     if (!success) {
       endGame();
-      overlayMessage.textContent = "Camera access required to play!";
+      overlayMessage.textContent =
+        "Unable to start game without webcam access. Please allow camera permissions and try again.";
       return;
     }
-
+    
     window.handTracking.startDetection();
-    window.handTrackingInitialized = true;
+    window.handTrackingInitialized = true; //Flag to prevent reinitialization
   }
-
+  
   overlay.classList.add("hidden");
   gameLoop();
 }
@@ -298,22 +294,22 @@ function endGame() {
 // Event listeners
 startButton.addEventListener("click", startGame);
 
-// Check if TensorFlow.js is loaded
-function checkTensorFlowLoaded() {
+function checkLoadedTF() {
   if (typeof tf !== "undefined" && typeof handPoseDetection !== "undefined") {
-    // TensorFlow.js and dependencies loaded
+    //libraries ll get defined after loading 
     loadingOverlay.classList.add("hidden");
   } else {
-    // Check again after a short delay
-    setTimeout(checkTensorFlowLoaded, 100);
+    //check again after 100ms
+    setTimeout(checkLoadedTF, 100);
   }
 }
 
-// Start checking once DOM is loaded
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", checkTensorFlowLoaded);
+  // Wait for DOM to load before checking if TF.js is loaded
+  document.addEventListener("DOMContentLoaded", checkLoadedTF);
 } else {
-  checkTensorFlowLoaded();
+  // DOM already loaded, check immediately
+  checkLoadedTF();
 }
 
 // Initial render

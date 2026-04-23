@@ -1,157 +1,55 @@
-# Air Juggler using TensorFlow.js - Gesture-Controlled Game
+# 🖐️ Air Juggler: Controle por Gestos com TensorFlow.js
 
-A beginner-friendly tutorial project that teaches TensorFlow.js and MediaPipe Hands through building an interactive gesture-controlled game.
+Este projeto foi desenvolvido como um estudo prático para o aprimoramento de habilidades em **JavaScript**, focando em manipulação de fluxos assíncronos, APIs de mídia e integração de modelos de inteligência artificial diretamente no front-end.
 
-<!-- TBD -->
-<!-- ![Air Juggler Demo](demo.gif) -->
+O objetivo principal é entender como transformar dados brutos de sensores (neste caso, a webcam) em uma experiência interativa sem o uso de periféricos tradicionais.
 
-## What You'll Learn
+> **Nota:** Este projeto é um dos tutoriais práticos disponibilizados pela plataforma [Codédex](https://www.codedex.io).
 
-- **TensorFlow.js** - Running machine learning models in the browser
-- **MediaPipe Hands** - Real-time hand landmark detection
-- **Webcam Access** - Using the `getUserMedia` API
-- **Video Processing** - Drawing video feeds to HTML5 Canvas
-- **Real-time Interactions** - Creating responsive gesture-based applications
+---
 
-## Quick Start
+## 🎮 Como o Jogo Funciona
 
-### Option 1: Start from Scratch
+O **Air Juggler** (Malabarista de Ar) é um jogo de habilidade onde o objetivo é manter bolas virtuais flutuando o maior tempo possível.
 
-1. Open the **starter/** directory
-2. Follow the **TUTORIAL.md** step-by-step
-3. Complete the TODOs in the code
-4. Reference **completed/** if you get stuck
+1.  **Início:** O jogador clica em "Start Game" e concede permissão para a webcam.
+2.  **Detecção:** O sistema mapeia as mãos do jogador em tempo real.
+3.  **Mecânica:** As mãos do jogador funcionam como "pás" invisíveis. Ao mover a mão para a posição onde uma bola está caindo, ocorre uma detecção de colisão baseada nas coordenadas da palma.
+4.  **Desafio:** O jogador deve usar movimentos rápidos para rebater as bolas para cima. O jogo termina se as bolas caírem abaixo do limite da tela.
+5.  **Feedback:** O tempo de sobrevivência é rastreado para definir a pontuação final.
 
-### Option 2: Try the Completed Version
+---
 
-1. Open the **completed/** directory
-2. Open `index.html` in a modern browser
-3. Grant camera permissions
-4. Click "Start Game" and play!
+## 🧠 Fundamentação Teórica
 
-## File Structure
+### 1. O Paradigma do Aprendizado de Máquina
+Diferente da programação convencional baseada em regras rígidas (`if/else`), este projeto utiliza **Machine Learning**. Em vez de "codar" manualmente o que define uma mão, utilizamos um modelo que aprendeu a reconhecer padrões de dedos e articulações após ser exposto a milhares de imagens. Isso permite que o JavaScript identifique sua mão mesmo com fundos complexos ou variações de iluminação.
 
-```
-air-juggler/
-├── starter/             # Incomplete code with TODOs (start here!)
-│   ├── index.html       # HTML without TensorFlow scripts
-│   ├── style.css        # Complete styling (provided)
-│   ├── game.js          # Game boilerplate with TODOs
-│   └── handTracking.js  # Hand tracking boilerplate with TODOs
-├── completed/           # Fully working code (reference)
-│   ├── index.html
-│   ├── style.css
-│   ├── game.js
-│   └── handTracking.js
-└── README.md            # This file
-```
+> ****
 
-## How to Play
+### 2. Visão Computacional com MediaPipe
+O motor de detecção é o **MediaPipe Hands**. Ele identifica **21 pontos-chave (landmarks)** em cada mão. 
+- Para o funcionamento do jogo, o JavaScript extrai esses pontos e calcula a média entre o pulso e a base dos dedos para encontrar o **centro da palma**.
+- Esse ponto central é o que interage com os objetos do jogo.
 
-1. **Open the game** - Load `index.html` in a browser (Chrome, Firefox, Edge recommended)
-2. **Grant camera permission** - Allow access when prompted
-3. **Click "Start Game"** - Wait for the ML model to load (~2-3 seconds)
-4. **Move your hands** - Position your hands in front of the camera
-5. **Bounce the ball** - Keep the ball in the air by hitting it with your hands!
+> ****
 
-### Game Rules
+### 3. Processamento em Tempo Real (On-Device)
+Para que o jogo seja responsivo, utilizamos o **TensorFlow.js**, que permite a execução do modelo diretamente no navegador.
+- **WebGL:** O JavaScript utiliza a aceleração de hardware (GPU) para processar os quadros do vídeo instantaneamente.
+- **Ciclo de Detecção:** O modelo analisa o feed da webcam a cerca de 30 quadros por segundo (FPS), enquanto a lógica do jogo roda a 60 FPS para garantir suavidade.
 
-- A ball falls due to gravity
-- Your hands create invisible "paddles" that bounce the ball upward
-- If the ball falls off the bottom of the screen, game over
-- Score is based on how long you survive (in seconds)
+### 4. Sincronização e Espelhamento
+Como a webcam captura a imagem de forma invertida (como um espelho), aplicamos uma lógica matemática para inverter o eixo horizontal (X). Sem esse ajuste, ao mover sua mão para a direita, a "pá" do jogo iria para a esquerda, tornando a jogabilidade impossível.
 
-## Prerequisites
+---
 
-- Basic JavaScript knowledge
-- Understanding of async/await
-- HTML5 Canvas basics (helpful but not required)
-- Modern web browser with webcam
+## 🛠️ Skills Desenvolvidas
+* **Manipulação de DOM:** Controle de estados de carregamento e overlays de interface.
+* **Asynchronous JS:** Uso intenso de `async/await` para gerenciar o carregamento de modelos pesados e acesso a hardware.
+* **Tratamento de Fluxos de Dados:** Transformação de coordenadas matemáticas complexas em estados de jogo utilizáveis.
+* **API de Mídia:** Gerenciamento de permissões e processamento de vídeo via `getUserMedia`.
 
-## Browser Compatibility
-
-Requires a modern browser with:
-
-- WebRTC support (for webcam access)
-- ES6+ JavaScript support
-- HTML5 Canvas support
-- WebGL support (for GPU acceleration)
-
-**Tested on:**
-
-- Chrome 90+
-- Firefox 88+
-- Edge 90+
-- Safari 14+
-
-## Technical Stack
-
-- **HTML5 Canvas** - Game rendering
-- **Vanilla JavaScript** - No frameworks needed!
-- **TensorFlow.js** - Machine learning framework
-- **MediaPipe Hands** - Pre-trained hand detection model
-
-## Performance Notes
-
-- **Detection runs at ~30 FPS** - Good balance of accuracy and performance
-- **Rendering runs at 60 FPS** - Smooth visuals
-- **Model loading** - First load downloads ~10MB, then cached
-- **GPU acceleration** - Automatically used when available
-
-## Troubleshooting
-
-**Camera not working?**
-
-- Ensure you've granted camera permissions
-- Check that no other app is using your camera
-- Try refreshing the page
-- Check browser console for errors
-
-**Model loading slowly?**
-
-- First load downloads the MediaPipe Hands model
-- Subsequent loads use browser cache
-- Check your internet connection
-
-**Hands not detected?**
-
-- Ensure good lighting conditions
-- Keep hands clearly visible to camera
-- Try moving closer or adjusting camera angle
-- Make sure hands are within the camera frame
-
-**Low FPS/Performance?**
-
-- Close other browser tabs
-- Check if GPU acceleration is enabled
-- Try using a different browser
-- Reduce `maxHands` from 2 to 1 in configuration
-
-## Next Steps
-
-Once you've completed the tutorial, try these challenges:
-
-1. **Multiple balls** - Juggle 2-3 balls instead of 1
-2. **Difficulty levels** - Adjust gravity and bounce velocity
-3. **Finger tracking** - Detect individual fingers instead of palm
-4. **Gesture recognition** - Recognize specific hand gestures
-5. **Sound effects** - Add audio feedback when bouncing
-6. **Power-ups** - Add special items that appear randomly
-7. **Leaderboard** - Save high scores to localStorage
-8. **Multiplayer** - Two-player mode with different colored balls
-
-## Resources
-
-- [TensorFlow.js Documentation](https://www.tensorflow.org/js)
-- [MediaPipe Hands Guide](https://google.github.io/mediapipe/solutions/hands.html)
-- [Hand Pose Detection API](https://github.com/tensorflow/tfjs-models/tree/master/hand-pose-detection)
-- [WebRTC getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia)
-- [HTML5 Canvas Tutorial](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial)
-
-## Credits
-
-Built as part of the [Codédex Project Tutorials](https://www.codedex.io/projects).
-
-## License
-
-MIT License - Feel free to use this code for learning and teaching!
+---
+*Documentação teórica fundamentada no tutorial original de Dharmarajsinh Jethva para Codédex.*
+*Repositório com arquivos originais do projeto em https://github.com/Goku-kun/air-juggler-using-tensorflowjs*
