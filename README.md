@@ -39,7 +39,6 @@ O motor de detecção é o **MediaPipe Hands**. Ele identifica **21 pontos-chave
 
 <img width="1543" height="538" alt="image" src="https://github.com/user-attachments/assets/b4c2b89a-aa65-48cf-b54e-c93900375b05" />
 
----
 > ****
 
 ### 3. Processamento em Tempo Real (On-Device)
