@@ -23,13 +23,10 @@ O **Air Juggler** (Malabarista de Ar) é um jogo de habilidade onde o objetivo �
 ## 🧠 Fundamentação Teórica
 
 ### 1. O Paradigma do Aprendizado de Máquina
-Diferente da programação convencional baseada em regras rígidas (`if/else`), este projeto utiliza **Machine Learning**. Em vez de "codar" manualmente o que define uma mão, utilizamos um modelo que aprendeu a reconhecer padrões de dedos e articulações após ser exposto a milhares de imagens. Isso permite que o JavaScript identifique sua mão mesmo com fundos complexos ou variações de iluminação.
+Diferente da programação convencional baseada em regras rígidas (`if/else`), este projeto utiliza **Machine Learning**. Em vez de "codar" manualmente o que define uma mão, utilizamos um modelo que aprendeu a reconhecer padrões de dedos e articulações após ser exposto a milhares de imagens. Isso permite que o JavaScript identifique sua mão mesmo com fundos complexos ou variações de iluminação.  
 
-\
 
-<img width="2048" height="1496" alt="image" src="https://github.com/user-attachments/assets/d9c96987-4387-4991-9881-664026b1c9aa" />
-
-\
+<img width="2048" height="1496" alt="image" src="https://github.com/user-attachments/assets/d9c96987-4387-4991-9881-664026b1c9aa" />  
 
 > ****
 
@@ -38,12 +35,10 @@ O motor de detecção é o **MediaPipe Hands**. Ele identifica **21 pontos-chave
 
 - Para o funcionamento do jogo, o JavaScript extrai esses pontos e calcula a média entre o pulso e a base dos dedos para encontrar o **centro da palma**.
 - Esse ponto central é o que interage com os objetos do jogo.
+  
+<img width="1543" height="538" alt="image" src="https://github.com/user-attachments/assets/b4c2b89a-aa65-48cf-b54e-c93900375b05" />  
 
-\
 
-<img width="1543" height="538" alt="image" src="https://github.com/user-attachments/assets/b4c2b89a-aa65-48cf-b54e-c93900375b05" />
-
-\
 > ****
 
 ### 3. Processamento em Tempo Real (On-Device)
